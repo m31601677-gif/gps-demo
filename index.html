@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Share My Location</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #101827;
+      color: white;
+      text-align: center;
+      padding: 40px 15px;
+    }
+    .card {
+      max-width: 380px;
+      margin: 40px auto;
+      padding: 25px;
+      background: #1f2937;
+      border-radius: 18px;
+    }
+    button {
+      background: #22c55e;
+      color: #07130b;
+      border: none;
+      border-radius: 10px;
+      padding: 14px 20px;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #result {
+      margin-top: 22px;
+      overflow-wrap: anywhere;
+    }
+    a { color: #86efac; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>📍 Share My Location</h1>
+    <p>Tap the button below to share your current location voluntarily.</p>
+    <button onclick="shareLocation()">Share My Location</button>
+    <div id="result" aria-live="polite"></div>
+  </div>
+
+  <script>
+    function shareLocation() {
+      const result = document.getElementById("result");
+
+      if (!navigator.geolocation) {
+        result.textContent = "Location is not supported by this browser.";
+        return;
+      }
+
+      result.textContent = "Please allow location permission if you wish to share.";
+
+      navigator.geolocation.getCurrentPosition(
+        function(position) {
+          const lat = position.coords.latitude;
+          const lon = position.coords.longitude;
+          const link = "https://www.google.com/maps?q=" + lat + "," + lon;
+
+          result.replaceChildren();
+          const message = document.createElement("p");
+          message.textContent = "Your location was retrieved. Share this link only if you choose:";
+          const anchor = document.createElement("a");
+          anchor.href = link;
+          anchor.textContent = "Open your location in Google Maps";
+          anchor.target = "_blank";
+          anchor.rel = "noopener noreferrer";
+          result.append(message, anchor);
+        },
+        function() {
+          result.textContent = "Location unavailable or permission denied. You can try again.";
+        }
+      );
+    }
+  </script>
+</body>
+</html> 
